@@ -11,10 +11,6 @@ stages:
       - job: Terraforminitplan
         displayName: Terraform init & plan
         steps:
-        - task: 
-        - task: TerraformInstaller@1
-          inputs:
-            terraformVersion: 'latest'
         - task: TerraformTask@5
           inputs:
             provider: 'azurerm'
