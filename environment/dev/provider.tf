@@ -6,13 +6,13 @@ terraform {
     }
   }
 
+  backend "azurerm" {
+    resource_group_name  = "infra-rg-001"
+    storage_account_name = "infrastorageacct001"
+    container_name       = "infracontainer"
+    key                  = "terraform.tfstate"
+  }
 }
-#   backend "azurerm" {
-#     resource_group_name  = ""
-#     storage_account_name = ""
-#     container_name       = ""
-#     key                  = ""
-#   }
 
 provider "azurerm" {
   features {}

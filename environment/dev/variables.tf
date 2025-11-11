@@ -14,6 +14,7 @@ variable "stg" {
     location                 = string
     account_tier             = string
     account_replication_type = string
+    tags                     = map(string)
   }))
 }
 
