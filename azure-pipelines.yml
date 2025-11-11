@@ -4,6 +4,9 @@ trigger:
 
 pool: dev-agent
 
+variables: 
+  workDir: '$(System.DefaultWorkingDirectory)/environment/dev'
+
 stages:
   - stage: build
     displayName: Build
@@ -18,7 +21,7 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'init'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/environments/dev'
+            workingDirectory: '$(workDir)'
             backendServiceArm: 'Shyamu_bhagat'
             backendAzureRmResourceGroupName: 'infra-rg-001'
             backendAzureRmStorageAccountName: 'infrastorageacct001'
@@ -29,7 +32,7 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'plan'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/environments/dev'
+            workingDirectory: '$(workDir)'
             environmentServiceNameAzureRM: 'Shyamu_bhagat'
 
   - stage: scanning
