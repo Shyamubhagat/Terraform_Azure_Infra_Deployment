@@ -11,13 +11,14 @@ stages:
   - stage: build
     displayName: Build
     jobs:
-      - job: Terraforminitplan
+      - job: terraformInitPlan
         displayName: Terraform init & plan
         steps:
         - task: TerraformInstaller@1
           inputs:
             terraformVersion: 'latest'
         - task: TerraformTask@5
+          displayName: Terraform Init
           inputs:
             provider: 'azurerm'
             command: 'init'
@@ -29,10 +30,45 @@ stages:
             backendAzureRmKey: 'terraform.tfstate'
 
         - task: TerraformTask@5
+          displayName: Terraform Plan
           inputs:
             provider: 'azurerm'
             command: 'plan'
             workingDirectory: '$(workDir)'
             environmentServiceNameAzureRM: 'Shyamu_bhagat'
-
-
+  - stage: deploy
+    displayName: Deploy
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+    jobs:
+      - job: manualValidation
+        displayName: Manual Validation
+        pool: server
+        steps:
+        - task: ManualValidation@1
+          inputs:
+            notifyUsers: 'Shyamu.bhagat1@hotmail.com'
+            approvers: 'Shyamu.bhagat1@hotmail.com'
+            instructions: 'Please rechekc the infra code'
+      - job: terraformApply
+        displayName: Terraform Apply
+        dependsOn: manualValidation
+        pool: dev-agent
+        steps:
+        - task: TerraformTask@5
+          displayName: Terraform Init
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/environment/dev'
+            backendServiceArm: 'Shyamu_bhagat'
+            backendAzureRmResourceGroupName: 'infra-rg-001'
+            backendAzureRmStorageAccountName: 'infrastorageacct001'
+            backendAzureRmContainerName: 'infracontainer'
+            backendAzureRmKey: 'terraform.tfstate'
+        - task: TerraformTask@5
+          displayName: Terraform Apply
+          inputs:
+            provider: 'azurerm'
+            command: 'apply'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/environment/dev'
+            environmentServiceNameAzureRM: 'Shyamu_bhagat'
