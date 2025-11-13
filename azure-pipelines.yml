@@ -59,7 +59,7 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'init'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/environment/dev'
+            workingDirectory: '$(workDir)'
             backendServiceArm: 'Shyamu_bhagat'
             backendAzureRmResourceGroupName: 'infra-rg-001'
             backendAzureRmStorageAccountName: 'infrastorageacct001'
