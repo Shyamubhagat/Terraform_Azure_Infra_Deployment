@@ -36,8 +36,8 @@ stages:
             command: 'plan'
             workingDirectory: '$(workDir)'
             environmentServiceNameAzureRM: 'Shyamu_bhagat'
-  - stage: deploy
-    displayName: Deploy
+  - stage: manualapproval
+    displayName: Manual Approval
     jobs:
       - job: manualValidation
         displayName: Manual Validation
@@ -48,9 +48,12 @@ stages:
             notifyUsers: 'Shyamu.bhagat1@hotmail.com'
             approvers: 'Shyamu.bhagat1@hotmail.com'
             instructions: 'Please rechekc the infra code'
+  - stage: deploy
+    displayName: Deploy
+    dependsOn: manualapproval
+    jobs:
       - job: terraformApply
         displayName: Terraform Apply
-        dependsOn: manualValidation
         pool: dev-agent
         steps:
         - task: TerraformTask@5
@@ -69,5 +72,6 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'apply'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/environment/dev'
+            workingDirectory: '$(workDir)'
+            commandOptions: '--autoapprove'
             environmentServiceNameAzureRM: 'Shyamu_bhagat'
