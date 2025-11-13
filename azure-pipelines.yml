@@ -38,7 +38,6 @@ stages:
             environmentServiceNameAzureRM: 'Shyamu_bhagat'
   - stage: deploy
     displayName: Deploy
-    condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
     jobs:
       - job: manualValidation
         displayName: Manual Validation
